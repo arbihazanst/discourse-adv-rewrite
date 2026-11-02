@@ -19,17 +19,23 @@ def main():
     p.add_argument('--output-dir',default=BASELINE_DIR)
     p.add_argument('--victims',nargs='*')
     p.add_argument('--base-url')
+    p.add_argument('--chat-model',help='Classify with this exact Ollama tag as one chat victim instead of configured victims')
+    p.add_argument('--limit',type=int,default=0,help='First N selected rows for a connection test; 0 keeps all rows')
     p.add_argument('--decision-base-url',default='http://127.0.0.1:11435')
     p.add_argument('--checkpoint-every',type=int,default=25)
     p.add_argument('--dry-run',action='store_true')
     args=p.parse_args()
+    if args.limit<0:p.error('--limit must be nonnegative')
+    if args.chat_model and args.victims:p.error('Use --chat-model or --victims, not both')
     if not Path(args.input).is_file():p.error('Input does not exist: '+args.input+'; run RUN_CURATE_PPLX.bat to create the new curated dataset first.')
     print('Loading input:',args.input,flush=True)
     config=json.loads(Path(args.config).read_text());rows=read_dataset(args.input,label=args.label)
     if not rows:raise ValueError('No input rows match label filter: '+args.label)
     if args.require_curated or args.input==CURATED_DATASET:validate_curated_rows(rows)
+    if args.limit:rows=rows[:args.limit]
     print('Selected label',args.label,':',len(rows),'rows',flush=True)
     victims=[v for v in config['victims'] if v['id'] in args.victims] if args.victims else [v for v in config['victims'] if v.get('enabled',True)]
+    if args.chat_model:victims=[{'id':'ollama_custom','tag':args.chat_model,'provider':'ollama','kind':'chat','enabled':True}]
     if not victims:raise ValueError('No matching victims')
     outdir=Path(args.output_dir);outdir.mkdir(parents=True,exist_ok=True)
     dataset_hash=hash_file(args.input)
@@ -43,11 +49,13 @@ def main():
         signature={'dataset_hash':dataset_hash,'model':victim,'baseline_prompt_hash':hashlib.sha256(PROMPT.encode()).hexdigest(),'decision_endpoint':args.decision_base_url,'chat_endpoint':args.base_url or config['ollama_base_url']}
         signature['classification_task_hash']=hashlib.sha256(json.dumps([INSTRUCTIONS,CRITERIA],sort_keys=True).encode()).hexdigest()
         if args.label!='all':signature['label_filter']=args.label
+        if args.limit:signature['row_limit']=args.limit
         if manifest.exists():
             if json.loads(manifest.read_text())!=signature:raise ValueError('Baseline changed; use a new output directory: '+str(path))
         elif journal.exists():raise ValueError('Missing manifest for checkpoint '+str(journal))
         else:atomic_json(manifest,signature)
         cached=load_row_checkpoint(journal, ('baseline_status','baseline_prediction','dataset_label'))
+        if args.limit:atomic_csv(outdir/'selected_input.csv',rows,list(rows[0]))
         client=Ollama(args.decision_base_url if victim['kind']=='decision' else args.base_url or config['ollama_base_url'])
         print('Victim:',victim['id'],'cached',len(cached),'of',len(rows),flush=True)
         result=[]

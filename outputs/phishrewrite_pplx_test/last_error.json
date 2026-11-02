@@ -1,0 +1,48 @@
+{
+  "completed_rows": 8,
+  "diagnostics": {
+    "attempts": 3,
+    "failures": [
+      {
+        "changed_fields": {
+          "state": {
+            "actual_characters": 196,
+            "actual_sha256": "4f3b5fd2f090933311a6cd345ca388812c33524077aac5fdd1cde6c26a7551dc",
+            "expected_characters": 196,
+            "expected_sha256": "433e47bbe78f8d1326112ab10b379df8d030ab96135f8084fd8b08b79d0be054",
+            "missing": false
+          }
+        },
+        "extra_field_count": 0
+      },
+      {
+        "changed_fields": {
+          "state": {
+            "actual_characters": 196,
+            "actual_sha256": "6df60d1998f466efb06fcdb01eb3344ab02a8d0dc2cb446278b83359a87c1dd2",
+            "expected_characters": 196,
+            "expected_sha256": "433e47bbe78f8d1326112ab10b379df8d030ab96135f8084fd8b08b79d0be054",
+            "missing": false
+          }
+        },
+        "extra_field_count": 0
+      },
+      {
+        "changed_fields": {
+          "state": {
+            "actual_characters": 196,
+            "actual_sha256": "ed968e4c4dd9cae27f0756c261e7916b3826d341400a18f3de1a27b763056101",
+            "expected_characters": 196,
+            "expected_sha256": "433e47bbe78f8d1326112ab10b379df8d030ab96135f8084fd8b08b79d0be054",
+            "missing": false
+          }
+        },
+        "extra_field_count": 0
+      }
+    ]
+  },
+  "error_type": "ToolArgumentsMismatch",
+  "position": 9,
+  "prediction_recorded": false,
+  "row_id": "phishrewrite-nazario-4119"
+}

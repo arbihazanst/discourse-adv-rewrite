@@ -1,0 +1,15 @@
+{
+  "failed_row_id": "phishrewrite-nazario-4119",
+  "failure": "Open WebUI routing model changed Unicode characters in the email before calling PPLX; result rejected.",
+  "next_requirement": "A server-side tool execution route that forwards the original state without an LLM regenerating its characters, or a routing correction that passes the existing exact-content check.",
+  "non_phishing": 1,
+  "original_email_predictions_only": true,
+  "phishing": 7,
+  "selected_rows": 10,
+  "status": "incomplete_tool_input_integrity_failure",
+  "unattempted_row_ids": [
+    "phishrewrite-nazario-4120"
+  ],
+  "unicode_escape_retry_attempts": 3,
+  "valid_decisions": 8
+}

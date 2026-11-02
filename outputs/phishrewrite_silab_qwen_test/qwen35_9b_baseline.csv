@@ -1,0 +1,4 @@
+﻿row_id,dataset_label,original_sha256,source_corpus,baseline_prediction,baseline_status,baseline_error,decision_confidence,decision_probability_phishing,victim_id,victim_model,victim_kind
+phishrewrite-nazario-4111,1,daff6bf0381f9fc315ad094131c29fb0d1893456976c737d57488b5c87b96cef,nazario,0,ok,,,,qwen35_9b,qwen3.5:9b,chat
+phishrewrite-nazario-4112,1,ebc8df275fa53a7de4494c0fb6e9618572776b8990745834dbba441a911a8d17,nazario,1,ok,,,,qwen35_9b,qwen3.5:9b,chat
+phishrewrite-nazario-4113,1,9c1647ab0c0b90739846a65a36cc588834427e90886e5f26e1e76b9774172f55,nazario,1,ok,,,,qwen35_9b,qwen3.5:9b,chat

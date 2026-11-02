@@ -1,0 +1,11 @@
+﻿row_id,dataset_label,original_sha256,source_corpus,baseline_prediction,baseline_status,baseline_error,decision_confidence,decision_probability_phishing,victim_id,victim_model,victim_kind
+phishrewrite-nazario-4111,1,daff6bf0381f9fc315ad094131c29fb0d1893456976c737d57488b5c87b96cef,nazario,0,ok,,0.935033895493157,0.03248305225342152,pplx_decider,pplx-decider:latest,decision
+phishrewrite-nazario-4112,1,ebc8df275fa53a7de4494c0fb6e9618572776b8990745834dbba441a911a8d17,nazario,1,ok,,0.839867450092135,0.9199337250460675,pplx_decider,pplx-decider:latest,decision
+phishrewrite-nazario-4113,1,9c1647ab0c0b90739846a65a36cc588834427e90886e5f26e1e76b9774172f55,nazario,1,ok,,0.6476813910892416,0.8238406955446208,pplx_decider,pplx-decider:latest,decision
+phishrewrite-nazario-4114,1,1869b8900a9ec217b900103c6f6e96790e05558abdfb35fd9da7035deeab7dd2,nazario,1,ok,,0.6300692651106852,0.8150346325553426,pplx_decider,pplx-decider:latest,decision
+phishrewrite-nazario-4115,1,a728f72118c51c61e249f9a26e65d85d6cd94d2ace383bc7562bb66d010690fd,nazario,1,ok,,0.9021933135873963,0.9510966567936981,pplx_decider,pplx-decider:latest,decision
+phishrewrite-nazario-4116,1,841efb497576825194ce117ae053ccdca5feb4984d6388ed686b7789cc2a370a,nazario,1,ok,,0.91120524220431,0.955602621102155,pplx_decider,pplx-decider:latest,decision
+phishrewrite-nazario-4117,1,2b8236f99ab118aabc2b41b0ea86f7c4c28139a49f6d3bf6b5c5748a3987a9fd,nazario,1,ok,,0.9186390352492648,0.9593195176246324,pplx_decider,pplx-decider:latest,decision
+phishrewrite-nazario-4118,1,8452bb7c51d9dfbcb6901a1c7abab7d2ed501c3d40f9a08200301c8005dcabc0,nazario,0,ok,,0.4430684205083619,0.27846578974581904,pplx_decider,pplx-decider:latest,decision
+phishrewrite-nazario-4119,1,c83ea96176537a7c562f9ecc550fceef7df30711b4e65e5eb5336c621521ba6c,nazario,1,ok,,0.7174162461754066,0.8587081230877033,pplx_decider,pplx-decider:latest,decision
+phishrewrite-nazario-4120,1,0b8e5715031465a16c523f66488a6a316e8515139143ad58dfd0b16340754cb2,nazario,1,ok,,0.8523344710997078,0.9261672355498539,pplx_decider,pplx-decider:latest,decision

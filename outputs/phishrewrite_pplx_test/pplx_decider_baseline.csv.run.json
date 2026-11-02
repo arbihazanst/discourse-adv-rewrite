@@ -1,0 +1,24 @@
+{
+  "classification_task_sha256": "a722f3ee96f510fdf3d0ff60cf0aa1fb4d9d52e69dfd55c8d60433f8e8731479",
+  "connection": {
+    "chat_model": "openai/gpt-oss-120b",
+    "tool_id": "server:pplxdeciderflash",
+    "webui_url": "https://llms.si-lab.org"
+  },
+  "dataset_sha256": "f098836100a4302c03d925d87eaafc090a8811583542d24721a158da9437fabe",
+  "label_filter": "1",
+  "limit": 10,
+  "row_ids": [
+    "phishrewrite-nazario-4111",
+    "phishrewrite-nazario-4112",
+    "phishrewrite-nazario-4113",
+    "phishrewrite-nazario-4114",
+    "phishrewrite-nazario-4115",
+    "phishrewrite-nazario-4116",
+    "phishrewrite-nazario-4117",
+    "phishrewrite-nazario-4118",
+    "phishrewrite-nazario-4119",
+    "phishrewrite-nazario-4120"
+  ],
+  "transport": "openwebui"
+}

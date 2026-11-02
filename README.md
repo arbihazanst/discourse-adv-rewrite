@@ -1,5 +1,10 @@
 # Research Kit v4 — MeAJOR phishing classification
 
+Optional SI-Lab classification on local port **11435** (no API key): run
+`RUN_BASELINE_SILAB.ps1` for a ten-email PhishRewrite/PPLX test. See
+[SI-Lab classification](docs/silab_classification.md) for other models, all-row
+runs, results and resume. Existing launchers and defaults below are unchanged.
+
 The active defensive workflow uses the original MeAJOR CSV, selects every **label-1** row without sampling, curates the examples, and classifies the accepted cohort with chat and decision models. Both model types use the same **PHISHING / NON_PHISHING** definitions in `phishbench/classification.py`. Original gold labels remain numeric 1/0 and are never overwritten by model predictions.
 
 ## Active flow

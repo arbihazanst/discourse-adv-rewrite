@@ -1,0 +1,17 @@
+{
+  "archive_md5": "md5:6868f01f5c416a93b5c3ffccc6a947c8",
+  "archive_member": "data/emails.csv",
+  "archive_sha256": "bc907619f21e87f87bfa5be6ee886eee59d18a4a0f72698401719e82441e04c7",
+  "duplicate_text_excess": 0,
+  "label": 1,
+  "output_sha256": "f098836100a4302c03d925d87eaafc090a8811583542d24721a158da9437fabe",
+  "selected_rows": 5390,
+  "selection": "All original label-1 emails; no length, language, prediction or split filtering.",
+  "source_rows": 28201,
+  "source_url": "https://zenodo.org/records/21018700",
+  "split_counts": {
+    "test": 1078,
+    "train": 4312
+  },
+  "text_policy": "Published text and defanged URLs preserved verbatim. No published rewrites included."
+}

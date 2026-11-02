@@ -1,0 +1,17 @@
+{
+  "baseline_prompt_hash": "abbc693da7c61a0ded5fbd9f9c58a6095794d532aaa41dd631b084346f4fd9fa",
+  "chat_endpoint": "http://127.0.0.1:11435",
+  "classification_task_hash": "a722f3ee96f510fdf3d0ff60cf0aa1fb4d9d52e69dfd55c8d60433f8e8731479",
+  "dataset_hash": "f098836100a4302c03d925d87eaafc090a8811583542d24721a158da9437fabe",
+  "decision_endpoint": "http://127.0.0.1:11435",
+  "label_filter": "1",
+  "model": {
+    "developer": "Perplexity",
+    "enabled": true,
+    "id": "pplx_decider",
+    "kind": "decision",
+    "provider": "ollama",
+    "tag": "pplx-decider:latest"
+  },
+  "row_limit": 10
+}

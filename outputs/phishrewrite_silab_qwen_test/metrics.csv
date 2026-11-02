@@ -1,0 +1,2 @@
+﻿victim_id,n_total,n_classified,n_missing,n_invalid_label,n_positive,n_negative,metric_scope,classification_coverage,detection_rate_all_positives,tp,tn,fp,fn,accuracy,precision_phishing,recall_phishing,f1_phishing,tp_pool,metric_note
+qwen35_9b,3,3,0,0,3,0,positive_only,1.0,0.666667,2,0,0,1,0.666667,1.0,0.666667,0.8,2,Metrics are conditional on classified rows. Single-class precision/F1/accuracy do not estimate full detector performance; detection_rate_all_positives includes missing predictions in its denominator.

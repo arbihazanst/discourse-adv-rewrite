@@ -1,0 +1,17 @@
+{
+  "available_detected_positives": 7,
+  "base_url": "https://llms.si-lab.org",
+  "baseline_sha256": "4b2f06f901c32885d36777b935286bc1791798a126bc3acf3640e7ef349a572d",
+  "input_sha256": "f098836100a4302c03d925d87eaafc090a8811583542d24721a158da9437fabe",
+  "max_tokens": 2048,
+  "model": "openai/gpt-oss-120b",
+  "prompt_sha256": "41a9d1228b0bb4038fd542f38046e6699aca8a67bee07d67d4b0d02f71eab810",
+  "purpose": "explicit_phishing_awareness_demo",
+  "row_ids": [
+    "phishrewrite-nazario-4112",
+    "phishrewrite-nazario-4113",
+    "phishrewrite-nazario-4114"
+  ],
+  "temperature": 0.2,
+  "valid_for_evasion_asr": false
+}

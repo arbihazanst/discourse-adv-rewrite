@@ -116,14 +116,22 @@ def extract_decision(response,expected,tool_id):
     return matched[0]
 
 
-def request_decision(base_url,chat_model,tool_id,payload,key_env='OPENWEBUI_API_KEY',timeout=180,attempts=3,response_observer=None,tool_attempts=3):
+def request_decision(base_url,chat_model,tool_id,payload,key_env='OPENWEBUI_API_KEY',timeout=180,attempts=3,response_observer=None,tool_attempts=3,escape_unicode=False):
     url,headers=authenticated_endpoint(base_url.rstrip('/')+'/api/chat/completions',key_env,require_systemone=False)
     # The tool chooses its fixed backend; the chat model only routes this request.
     expected={key:payload[key] for key in ('state','questions')}
+    routing_instructions=ROUTING_INSTRUCTIONS
+    if escape_unicode:
+        routing_instructions += (
+            ' The request below is JSON with Unicode escape sequences. Decode the JSON string exactly '
+            'when passing state to the tool. Preserve every Unicode code point, including visually similar '
+            'letters from different alphabets. Never transliterate, normalize, correct spelling, replace '
+            'lookalike characters with Latin letters, or pass literal backslash-u sequences as state.'
+        )
     request={
         'model':chat_model,
-        'messages':[{'role':'system','content':ROUTING_INSTRUCTIONS},
-                    {'role':'user','content':json.dumps(expected,ensure_ascii=False)}],
+        'messages':[{'role':'system','content':routing_instructions},
+                    {'role':'user','content':json.dumps(expected,ensure_ascii=escape_unicode)}],
         'stream':False,'params':{'function_calling':'legacy'},'tool_ids':[tool_id],
     }
     if tool_attempts<1:raise ValueError('Tool attempts must be positive')
@@ -145,4 +153,5 @@ def request_decision(base_url,chat_model,tool_id,payload,key_env='OPENWEBUI_API_
             time.sleep(min(attempt,3))
             continue
         evidence['decision_tool_validation_attempts']=attempt
+        if escape_unicode:evidence['decision_router_unicode_encoding']='json_ascii_escapes'
         return result,evidence
