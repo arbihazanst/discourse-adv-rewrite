@@ -32,7 +32,7 @@ class TestGptossDemo(unittest.TestCase):
                        'original_sha256': hashlib.sha256(text.encode()).hexdigest()}
                 original.append(row)
                 baseline.append({k: row[k] for k in ('row_id', 'dataset_label', 'original_sha256')})
-                baseline[-1].update(baseline_prediction=prediction, baseline_status='ok' if prediction else 'error')
+                baseline[-1].update(baseline_prediction=prediction, baseline_status='ok' if prediction else 'error', victim_kind='decision')
             atomic_csv(root / 'source.csv', original, list(original[0]))
             atomic_csv(root / 'baseline.csv', baseline, list(baseline[0]))
             prompt = root / 'prompt.txt'
@@ -48,7 +48,7 @@ class TestGptossDemo(unittest.TestCase):
                 payload = request.call_args.args[1]
                 self.assertEqual(payload['tools'], [])
                 self.assertEqual(payload['tool_ids'], [])
-                self.assertEqual(payload['model'], 'openai/gpt-oss-120b')
+                self.assertEqual(payload['model'], 'gpt-oss-120b-abliterated')
                 self.assertEqual(self.runner.main(), 0)
                 self.assertEqual(request.call_count, 1)
                 prompt.write_text('Changed prompt.', encoding='utf-8')
@@ -59,6 +59,10 @@ class TestGptossDemo(unittest.TestCase):
             self.assertEqual(generated[0]['review_status'], 'unreviewed')
             self.assertEqual(generated[0]['final_prediction'], '')
             self.assertEqual(generated[0]['valid_for_evasion_asr'], '0')
+
+    def test_rejects_chat_victim_baseline(self):
+        with self.assertRaisesRegex(ValueError, 'decision-model victim baseline'):
+            self.runner.select_detected([], [{'victim_kind': 'chat'}])
 
 
 if __name__ == '__main__':

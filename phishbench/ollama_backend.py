@@ -72,13 +72,14 @@ class Ollama:
         with urllib.request.urlopen(self.base+'/api/tags',timeout=min(20,self.timeout)) as response:
             return [m.get('name','') for m in json.load(response).get('models',[])]
 
-    def classify_chat(self,model,text,system_prompt,max_predict=16):
-        reply=self.post('/api/chat',{'model':model,'stream':False,'think':False,'messages':[{'role':'system','content':system_prompt},{'role':'user','content':'<EMAIL_DATA>\n'+text+'\n</EMAIL_DATA>'}], 'options':{'temperature':0,'num_predict':max_predict}})
-        msg=reply.get('message',{})
-        answer=msg.get('content','')
-        if not answer or (msg.get('refusal') or re.search(r'(?i)^i cannot (assist|comply)',answer.strip())):
-            raise BackendError('model_refusal','Classifier refused / produced empty response')
-        return Prediction(parse_label(answer),meta=self.last_call.copy())
+    # Legacy chat-victim implementation disabled; retained for reference.
+    # def classify_chat(self,model,text,system_prompt,max_predict=16):
+    #     reply=self.post('/api/chat',{'model':model,'stream':False,'think':False,'messages':[{'role':'system','content':system_prompt},{'role':'user','content':'<EMAIL_DATA>\n'+text+'\n</EMAIL_DATA>'}], 'options':{'temperature':0,'num_predict':max_predict}})
+    #     msg=reply.get('message',{})
+    #     answer=msg.get('content','')
+    #     if not answer or (msg.get('refusal') or re.search(r'(?i)^i cannot (assist|comply)',answer.strip())):
+    #         raise BackendError('model_refusal','Classifier refused / produced empty response')
+    #     return Prediction(parse_label(answer),meta=self.last_call.copy())
 
     def classify_decision(self,model,text):
         reply=self.post('/v1/systemone',{'model':model,'state':text,'questions':{'email_class':{'type':'choice','instructions':INSTRUCTIONS,'criteria':CRITERIA}}})

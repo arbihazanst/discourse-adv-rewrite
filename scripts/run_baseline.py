@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Defensive baseline classification for frozen MeAJOR cohorts; no generation."""
+"""Decision-model victim classification for prepared cohorts; no generation."""
 import argparse,csv,hashlib,json,sys
 from pathlib import Path
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]))
@@ -8,7 +8,25 @@ from phishbench.ollama_backend import Ollama,BackendError
 from phishbench.classification import CHAT_PROMPT,INSTRUCTIONS,CRITERIA
 from phishbench.workflow import CURATED_DATASET,BASELINE_DIR,validate_curated_rows
 
+# Retain the legacy prompt hash in decision manifests for checkpoint compatibility.
+# This template is not sent to a chat victim.
 PROMPT=CHAT_PROMPT
+
+
+def select_victims(config, requested=None):
+    configured = config['victims']
+    if requested:
+        unknown = set(requested) - {v['id'] for v in configured}
+        if unknown:
+            raise ValueError('Unknown victim IDs: ' + ', '.join(sorted(unknown)))
+        selected = [v for v in configured if v['id'] in requested]
+        if any(v['kind'] != 'decision' for v in selected):
+            raise ValueError('Only decision-model victims are supported; chat victims are disabled')
+    else:
+        selected = [v for v in configured if v.get('enabled', True) and v['kind'] == 'decision']
+    if not selected:
+        raise ValueError('No matching decision-model victims')
+    return selected
 
 def main():
     p=argparse.ArgumentParser()
@@ -19,14 +37,15 @@ def main():
     p.add_argument('--output-dir',default=BASELINE_DIR)
     p.add_argument('--victims',nargs='*')
     p.add_argument('--base-url')
-    p.add_argument('--chat-model',help='Classify with this exact Ollama tag as one chat victim instead of configured victims')
+    # Disabled legacy chat-victim option; retained for reference.
+    # p.add_argument('--chat-model',help='Classify with this exact Ollama tag as one chat victim instead of configured victims')
     p.add_argument('--limit',type=int,default=0,help='First N selected rows for a connection test; 0 keeps all rows')
     p.add_argument('--decision-base-url',default='http://127.0.0.1:11435')
     p.add_argument('--checkpoint-every',type=int,default=25)
     p.add_argument('--dry-run',action='store_true')
     args=p.parse_args()
     if args.limit<0:p.error('--limit must be nonnegative')
-    if args.chat_model and args.victims:p.error('Use --chat-model or --victims, not both')
+    # if args.chat_model and args.victims:p.error('Use --chat-model or --victims, not both')
     if not Path(args.input).is_file():p.error('Input does not exist: '+args.input+'; run RUN_CURATE_PPLX.bat to create the new curated dataset first.')
     print('Loading input:',args.input,flush=True)
     config=json.loads(Path(args.config).read_text());rows=read_dataset(args.input,label=args.label)
@@ -34,9 +53,10 @@ def main():
     if args.require_curated or args.input==CURATED_DATASET:validate_curated_rows(rows)
     if args.limit:rows=rows[:args.limit]
     print('Selected label',args.label,':',len(rows),'rows',flush=True)
-    victims=[v for v in config['victims'] if v['id'] in args.victims] if args.victims else [v for v in config['victims'] if v.get('enabled',True)]
-    if args.chat_model:victims=[{'id':'ollama_custom','tag':args.chat_model,'provider':'ollama','kind':'chat','enabled':True}]
-    if not victims:raise ValueError('No matching victims')
+    # Legacy mixed/chat selection retained as comments.
+    # victims=[v for v in config['victims'] if v['id'] in args.victims] if args.victims else [v for v in config['victims'] if v.get('enabled',True)]
+    # if args.chat_model:victims=[{'id':'ollama_custom','tag':args.chat_model,'provider':'ollama','kind':'chat','enabled':True}]
+    victims=select_victims(config,args.victims)
     outdir=Path(args.output_dir);outdir.mkdir(parents=True,exist_ok=True)
     dataset_hash=hash_file(args.input)
     plan=[{'victim_id':v['id'],'tag':v['tag'],'kind':v['kind'],'rows':len(rows),'label_filter':args.label,'status':'planned'} for v in victims]
@@ -56,7 +76,8 @@ def main():
         else:atomic_json(manifest,signature)
         cached=load_row_checkpoint(journal, ('baseline_status','baseline_prediction','dataset_label'))
         if args.limit:atomic_csv(outdir/'selected_input.csv',rows,list(rows[0]))
-        client=Ollama(args.decision_base_url if victim['kind']=='decision' else args.base_url or config['ollama_base_url'])
+        # client=Ollama(args.decision_base_url if victim['kind']=='decision' else args.base_url or config['ollama_base_url'])
+        client=Ollama(args.decision_base_url)
         print('Victim:',victim['id'],'cached',len(cached),'of',len(rows),flush=True)
         result=[]
         for idx,row in enumerate(rows,1):
@@ -64,7 +85,9 @@ def main():
             if item is None:
                 item={'row_id':rid,'dataset_label':row['dataset_label'],'original_sha256':row['original_sha256'],'source_corpus':row.get('source_corpus',''),'baseline_prediction':'','baseline_status':'','baseline_error':'','decision_confidence':'','decision_probability_phishing':'','victim_id':victim['id'],'victim_model':victim['tag'],'victim_kind':victim['kind']}
                 try:
-                    pred=client.classify_decision(victim['tag'],row['original_text']) if victim['kind']=='decision' else client.classify_chat(victim['tag'],row['original_text'],PROMPT)
+                    # Legacy chat dispatch retained; active victims use only systemone.
+                    # pred=client.classify_decision(victim['tag'],row['original_text']) if victim['kind']=='decision' else client.classify_chat(victim['tag'],row['original_text'],PROMPT)
+                    pred=client.classify_decision(victim['tag'],row['original_text'])
                     item['baseline_prediction']=str(pred.label);item['baseline_status']='ok'
                     item['decision_confidence']=pred.confidence if pred.confidence is not None else ''
                     item['decision_probability_phishing']=pred.probabilities.get('PHISHING','')

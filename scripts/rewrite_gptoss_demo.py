@@ -19,6 +19,8 @@ def select_detected(rows, baseline):
         raise ValueError('Duplicate source row IDs')
     selected, seen = [], set()
     for prediction in baseline:
+        if prediction.get('victim_kind') != 'decision':
+            raise ValueError('Demo selection requires a decision-model victim baseline')
         rid = prediction['row_id']
         if rid in seen or rid not in indexed:
             raise ValueError('Duplicate or unknown baseline row ID')
@@ -55,10 +57,11 @@ def demo_text(response):
 def main():
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument('--input', default='data/phishrewrite/label1.csv')
-    p.add_argument('--baseline', default='outputs/phishrewrite_pplx_test/pplx_decider_baseline.csv')
+    p.add_argument('--baseline', default='outputs/experiments/phishrewrite_pplx_test/pplx_decider_baseline.csv')
     p.add_argument('--prompt-file', default='templates/gptoss_demo_rewrite_prompt.txt')
     p.add_argument('--base-url', default='https://llms.si-lab.org')
-    p.add_argument('--model', default='openai/gpt-oss-120b')
+    p.add_argument('--config', default='config/models.json', help='Configuration supplying the attacker model tag')
+    p.add_argument('--model', help='Override config attacker.tag with the exact Open WebUI model ID')
     p.add_argument('--api-key-env', default='OPENWEBUI_API_KEY')
     p.add_argument('--output-dir', default='outputs/phishrewrite_gptoss_demo')
     p.add_argument('--limit', type=int, default=3, help='Maximum detected positives to rewrite; 0 = all available')
@@ -67,6 +70,10 @@ def main():
     args = p.parse_args()
     if args.limit < 0:
         p.error('--limit must be nonnegative')
+    if not args.model:
+        args.model = json.loads(Path(args.config).read_text(encoding='utf-8'))['attacker']['tag']
+    if not isinstance(args.model, str) or not args.model.strip():
+        p.error('Attacker model tag must be a nonempty string')
     prompt = Path(args.prompt_file).read_text(encoding='utf-8').strip()
     if not prompt:
         raise ValueError('Prompt file is empty')

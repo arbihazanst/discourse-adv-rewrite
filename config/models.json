@@ -2,9 +2,9 @@
   "experiment_id": "meajor_2026_v4",
   "ollama_base_url": "http://127.0.0.1:11434",
   "attacker": {
-    "id": "qwen38_27b",
-    "tag": "qwen3.8:latest",
-    "provider": "ollama",
+    "id": "gptoss_120b_abliterated",
+    "tag": "gpt-oss-120b-abliterated",
+    "provider": "openwebui",
     "kind": "chat",
     "temperature": 0.2
   },
@@ -14,14 +14,16 @@
       "tag": "qwen3.5:9b",
       "provider": "ollama",
       "kind": "chat",
-      "enabled": true
+      "enabled": false,
+      "note": "Inactive legacy chat victim; implementation retained as comments."
     },
     {
       "id": "gemma4_e4b",
       "tag": "gemma4:e4b",
       "provider": "ollama",
       "kind": "chat",
-      "enabled": true
+      "enabled": false,
+      "note": "Inactive legacy chat victim; implementation retained as comments."
     },
     {
       "id": "pplx_decider",

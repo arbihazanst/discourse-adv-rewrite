@@ -1,4 +1,4 @@
-# GPT-OSS demonstration rewrites
+# GPT-OSS-120B-Abliterated demonstration rewrites
 
 Run `RUN_GPTOSS_DEMO_REWRITE.ps1` from PowerShell in the project directory.
 It requests the Open WebUI API key using hidden input and generates up to three
@@ -9,10 +9,18 @@ PHISHING prediction in `outputs/phishrewrite_pplx_test/pplx_decider_baseline.csv
 are selected. That baseline is currently partial: seven detected positives are
 available. The rejected Unicode example and original false negative are excluded.
 
-The script calls `openai/gpt-oss-120b` directly through
+The script reads `attacker.tag` from `config/models.json`, currently
+`gpt-oss-120b-abliterated`, and calls that exact model ID through
 `https://llms.si-lab.org/api/chat/completions`, with tools disabled. GPT-OSS
 generates the rewritten text; it does not route a PPLX classification call.
-Existing classification launchers and criteria are unchanged.
+Victim classification uses decision models only. Baseline records must declare
+`victim_kind=decision`; chat-victim baselines are rejected. The separate Open
+WebUI PPLX tool router still uses `openai/gpt-oss-120b` and is not the attacker.
+
+The new attacker ID must be available on the Open WebUI server; availability has
+not been verified by this configuration change. The Python script accepts
+`--config` and an explicit `--model` override. Use a new output directory when
+switching from the previous attacker model so checkpoints remain separate.
 
 Edit `templates/gptoss_demo_rewrite_prompt.txt` to adjust the demonstration prompt.
 The default asks for text such as:

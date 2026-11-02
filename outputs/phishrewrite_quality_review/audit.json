@@ -1,0 +1,184 @@
+{
+  "checked_at": "2026-11-02T11:38:02.386550+07:00",
+  "release": "PhishRewrite v1.0",
+  "source_url": "https://zenodo.org/records/21018700",
+  "documentation": [
+    "https://github.com/gaurangkatyal/phishrewrite/blob/main/README.md",
+    "https://github.com/gaurangkatyal/phishrewrite/blob/main/LIMITATIONS.md",
+    "https://github.com/gaurangkatyal/phishrewrite/blob/main/src/release.py"
+  ],
+  "checks": {
+    "archive_matches_saved_published_md5": true,
+    "archive_matches_sidecar_sha256": true,
+    "prepared_file_matches_sidecar_sha256": true,
+    "prepared_contains_exactly_all_positive_ids": true,
+    "prepared_source_mismatch_rows": 0
+  },
+  "emails": {
+    "rows": 28201,
+    "columns": [
+      "id",
+      "label",
+      "source",
+      "split",
+      "original_id",
+      "had_html",
+      "subject",
+      "body",
+      "text"
+    ],
+    "labels": {
+      "0": 22811,
+      "1": 5390
+    },
+    "splits": {
+      "train": 22560,
+      "test": 5641
+    },
+    "split_label_counts": {
+      "train/0": 18248,
+      "test/0": 4563,
+      "train/1": 4312,
+      "test/1": 1078
+    },
+    "duplicate_id_excess": 0,
+    "empty_text_rows": 0,
+    "exact_duplicate_text_excess": 0,
+    "normalized_duplicate_text_excess": 0,
+    "exact_cross_split_text_groups": 0,
+    "normalized_cross_split_text_groups": 0,
+    "exact_text_conflicting_label_groups": 0,
+    "normalized_text_conflicting_label_groups": 0
+  },
+  "positive_originals": {
+    "rows": 5390,
+    "columns": [
+      "id",
+      "label",
+      "source",
+      "split",
+      "original_id",
+      "had_html",
+      "subject",
+      "body",
+      "text"
+    ],
+    "labels": {
+      "1": 5390
+    },
+    "splits": {
+      "train": 4312,
+      "test": 1078
+    },
+    "split_label_counts": {
+      "train/1": 4312,
+      "test/1": 1078
+    },
+    "duplicate_id_excess": 0,
+    "empty_text_rows": 0,
+    "exact_duplicate_text_excess": 0,
+    "normalized_duplicate_text_excess": 0,
+    "exact_cross_split_text_groups": 0,
+    "normalized_cross_split_text_groups": 0,
+    "exact_text_conflicting_label_groups": 0,
+    "normalized_text_conflicting_label_groups": 0
+  },
+  "prepared": {
+    "rows": 5390,
+    "columns": [
+      "row_id",
+      "dataset_label",
+      "original_text",
+      "original_sha256",
+      "source_dataset",
+      "source_corpus",
+      "source_index",
+      "source_original_id",
+      "source_split",
+      "subject",
+      "body",
+      "url_representation"
+    ],
+    "labels": {
+      "1": 5390
+    },
+    "splits": {
+      "train": 4312,
+      "test": 1078
+    },
+    "split_label_counts": {
+      "train/1": 4312,
+      "test/1": 1078
+    },
+    "duplicate_id_excess": 0,
+    "empty_text_rows": 0,
+    "exact_duplicate_text_excess": 0,
+    "normalized_duplicate_text_excess": 0,
+    "exact_cross_split_text_groups": 0,
+    "normalized_cross_split_text_groups": 0,
+    "exact_text_conflicting_label_groups": 0,
+    "normalized_text_conflicting_label_groups": 0
+  },
+  "source_label_counts": {
+    "spamassassin/0": 4111,
+    "nazario/1": 5390,
+    "enron/0": 18700
+  },
+  "duplicate_source_original_id_excess": 0,
+  "positive_missing_subject": 9,
+  "positive_missing_body": 81,
+  "positive_missing_body_by_split": {
+    "train": 68,
+    "test": 13
+  },
+  "positive_with_defanged_url_marker": 4216,
+  "rewrites": {
+    "rows": 4000,
+    "columns": [
+      "original_id",
+      "source",
+      "severity",
+      "provider",
+      "model",
+      "temperature",
+      "refused",
+      "n_orig_urls",
+      "retained_urls_strict",
+      "retained_urls_primary",
+      "n_primary_urls",
+      "rewrite_subject",
+      "rewrite_body",
+      "rewrite_text"
+    ],
+    "unique_original_ids": 500,
+    "models": {
+      "claude-haiku-4-5": 2000,
+      "gemini-2.5-flash": 2000
+    },
+    "severities": {
+      "0.25": 1000,
+      "0.5": 1000,
+      "0.75": 1000,
+      "1.0": 1000
+    },
+    "join_key": "(source, original_id) in emails.csv and rewrites.csv",
+    "missing_original_ids": 0,
+    "not_test_positive": 0,
+    "empty_text_rows": 1,
+    "retained_urls_strict": {
+      "True": 2712,
+      "False": 440,
+      "": 848
+    },
+    "refused": {
+      "False": 3960,
+      "True": 40
+    }
+  },
+  "limits": [
+    "Normalized checks cover NFKC, whitespace, and case only; no semantic near-duplicate detection.",
+    "No independent per-email human phishing-label adjudication.",
+    "No model inference, no URL visits, no test of pretraining contamination.",
+    "Published checksum is from the saved Zenodo metadata; current GitHub documentation was inspected separately."
+  ]
+}

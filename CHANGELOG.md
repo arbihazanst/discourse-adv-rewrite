@@ -1,3 +1,10 @@
+# Decision-only victims and attacker model — 2026-11-02
+
+- Set the rewrite attacker to `gpt-oss-120b-abliterated`; the demo script reads its default from `config/models.json`.
+- Limit baseline execution and demo selection to decision-model victims. PPLX, Nimble and TEv1 remain enabled; CLEF remains opt-in.
+- Preserve chat-victim code as comments and Qwen/Gemma configuration as disabled entries. Retain historical results and decision checkpoint compatibility.
+- Keep the Open WebUI PPLX tool router separate from the attacker; update README and workflow notes.
+
 # v4 — 2026-10-21
 
 - MeAJOR now PRIMARY; original 191 MB CSV bundled for reproducibility.

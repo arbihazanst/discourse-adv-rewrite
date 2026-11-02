@@ -1,8 +1,9 @@
+[CmdletBinding()]
 param(
     [string]$BaseUrl = 'http://127.0.0.1:11435',
     [string]$InputCsv = 'data/phishrewrite/label1.csv',
     [string[]]$Victims = @('pplx_decider'),
-    [string]$ChatModel,
+    # [string]$ChatModel, # Legacy chat-victim selection disabled.
     [int]$Limit = 10,
     [string]$OutputDirectory = 'outputs/phishrewrite_silab_test',
     [switch]$DryRun
@@ -14,19 +15,23 @@ if ($Limit -lt 0) { throw 'Limit must be 0 (all) or positive.' }
 $RunArguments = @('scripts/run_baseline.py', '--input', $InputCsv, '--label', '1',
     '--base-url', $BaseUrl, '--decision-base-url', $BaseUrl,
     '--limit', "$Limit", '--checkpoint-every', '1', '--output-dir', $OutputDirectory)
-if ($ChatModel) {
-    $ModelTags = @($ChatModel)
-    $RunArguments += @('--chat-model', $ChatModel)
-} else {
-    $Configuration = Get-Content -LiteralPath 'config/models.json' -Raw | ConvertFrom-Json
-    $KnownIds = @($Configuration.victims | ForEach-Object { $_.id })
-    foreach ($VictimId in $Victims) {
-        if ($VictimId -notin $KnownIds) { throw "Unknown configured victim: $VictimId" }
-    }
-    if (-not $Victims.Count) { throw 'Select at least one victim or supply ChatModel.' }
-    $ModelTags = @($Configuration.victims | Where-Object { $_.id -in $Victims } | ForEach-Object { $_.tag })
-    $RunArguments += @('--victims') + $Victims
+# Legacy chat-victim branch retained as comments.
+# if ($ChatModel) {
+#     $ModelTags = @($ChatModel)
+#     $RunArguments += @('--chat-model', $ChatModel)
+# } else {
+#     ... configured victim selection ...
+# }
+$Configuration = Get-Content -LiteralPath 'config/models.json' -Raw | ConvertFrom-Json
+$KnownIds = @($Configuration.victims | ForEach-Object { $_.id })
+foreach ($VictimId in $Victims) {
+    if ($VictimId -notin $KnownIds) { throw "Unknown configured victim: $VictimId" }
+    $Victim = $Configuration.victims | Where-Object { $_.id -eq $VictimId }
+    if ($Victim.kind -ne 'decision') { throw "Only decision-model victims are supported: $VictimId is disabled." }
 }
+if (-not $Victims.Count) { throw 'Select at least one decision-model victim.' }
+$ModelTags = @($Configuration.victims | Where-Object { $_.id -in $Victims } | ForEach-Object { $_.tag })
+$RunArguments += @('--victims') + $Victims
 if ($DryRun) {
     $RunArguments += '--dry-run'
 } else {

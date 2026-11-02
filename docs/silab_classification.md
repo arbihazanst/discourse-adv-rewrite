@@ -1,16 +1,15 @@
 # SI-Lab classification on port 11435
 
 The user-confirmed connection is `http://127.0.0.1:11435`, with no API key.
-Keep the SI-Lab connection/tunnel active. The server's `/api/tags` endpoint was
-verified on 2 November 2026 and lists all currently enabled configured victims:
+Keep the SI-Lab connection/tunnel active. Victim classification now uses decision
+models only. The server's `/api/tags` endpoint was verified on 2 November 2026;
+the enabled decision victims are:
 
 | Victim ID | Model tag | Classification route |
 | --- | --- | --- |
 | `pplx_decider` | `pplx-decider:latest` | `/v1/systemone` |
 | `nimble_9b` | `nimble:9b` | `/v1/systemone` |
 | `tev1_4b` | `tev1:4b` | `/v1/systemone` |
-| `qwen35_9b` | `qwen3.5:9b` | `/api/chat` |
-| `gemma4_e4b` | `gemma4:e4b` | `/api/chat` |
 
 Model-list presence is an availability check, not an inference result for every
 model. The launcher preserves the existing PHISHING/NON_PHISHING instructions,
@@ -40,24 +39,20 @@ To classify all 5,390 original positive emails with PPLX:
 .\RUN_BASELINE_SILAB.ps1 -Limit 0 -OutputDirectory outputs/phishrewrite_silab_pplx_all
 ```
 
-To test all five configured enabled victims on ten emails:
+To test all three configured enabled decision victims on ten emails:
 
 ```powershell
-.\RUN_BASELINE_SILAB.ps1 -Victims pplx_decider,nimble_9b,tev1_4b,qwen35_9b,gemma4_e4b -OutputDirectory outputs/phishrewrite_silab_five_test
+.\RUN_BASELINE_SILAB.ps1 -Victims pplx_decider,nimble_9b,tev1_4b -OutputDirectory outputs/phishrewrite_silab_decisions
 ```
 
-To select a different **chat-capable** model tag:
-
-```powershell
-.\RUN_BASELINE_SILAB.ps1 -ChatModel 'qwen3.5:4b' -OutputDirectory outputs/phishrewrite_silab_qwen4b_test
-```
-
-Use configured victim IDs for decision models; do not pass a decision-only model
-to `-ChatModel`. Custom chat output is named `ollama_custom_baseline.csv`, with
-the exact tag recorded in the rows and manifest.
+Use configured victim IDs for decision models. `-ChatModel` and baseline
+`--chat-model` are disabled. The Qwen/Gemma configuration entries remain with
+`enabled: false`; their selection is rejected even if that flag is changed.
+The old chat-victim implementation is retained as comments in the backend,
+baseline script and launcher. Historical chat results are not deleted.
 
 `-InputCsv` can select another prepared cohort. The original MeAJOR launchers
-and model configuration are unchanged. `-DryRun` checks local preparation
+also select only enabled decision victims. `-DryRun` checks local preparation
 without contacting the server. The Python baseline's new `--limit` defaults to
 zero (all selected rows), preserving its old default behavior.
 

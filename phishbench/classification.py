@@ -1,4 +1,4 @@
-"""One phishing classification task shared by chat and decision models."""
+"""Decision-victim classification task and legacy chat prompt provenance."""
 
 INSTRUCTIONS = (
     'Classify the email as PHISHING or NON_PHISHING using its visible content and intent. '
@@ -11,4 +11,5 @@ CRITERIA = {
                 'sensitive information or money, or to induce a harmful action through a deceptive link, attachment or request.',
     'NON_PHISHING': 'No sufficient evidence of that phishing intent; includes legitimate correspondence and ordinary promotional messages.',
 }
+# Retained only for existing decision manifest hashes; chat victims are disabled.
 CHAT_PROMPT = INSTRUCTIONS + '\n' + '\n'.join(f'{label}: {meaning}' for label, meaning in CRITERIA.items()) + '\nReturn exactly PHISHING or NON_PHISHING.'
